@@ -52,3 +52,8 @@ io.on("connection", socket => {
 });
 
 app.listen(process.env.SERVICE_SOCKET || 8080);
+
+const shutdown = () => app.close(() => process.exit());
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
