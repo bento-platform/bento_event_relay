@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
+  "bin": {
+    "chord-event-relay": "./index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/c3g/chord_event_relay.git"

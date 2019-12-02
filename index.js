@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const http = require("http");
 const redis = require("redis");
 const socketIO = require("socket.io");
