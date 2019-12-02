@@ -1,0 +1,23 @@
+{
+  "name": "chord_event_relay",
+  "version": "0.1.0",
+  "description": "Event relay service for the CHORD project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c3g/chord_event_relay.git"
+  },
+  "author": "David Lougheed <david.lougheed@mail.mcgill.ca>",
+  "license": "LGPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/c3g/chord_event_relay/issues"
+  },
+  "homepage": "https://github.com/c3g/chord_event_relay#readme",
+  "dependencies": {
+    "redis": "^2.8.0",
+    "socket.io": "^2.3.0"
+  }
+}
