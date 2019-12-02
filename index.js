@@ -22,9 +22,11 @@ const SERVICE_INFO = {
     "version": pj.version
 };
 
+const SERVICE_URL_BASE_PATH = process.env.SERVICE_URL_BASE_PATH || "";
+
 
 const app = http.createServer((req, res) => {
-    if (req.url === "/service-info") {
+    if (req.url === `${SERVICE_URL_BASE_PATH}/service-info`) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(SERVICE_INFO));
         return;
