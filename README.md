@@ -1,2 +1,3 @@
-# chord_event_relay
-Socket.IO-based event relay for the CHORD project.
+# CHORD Event Relay
+
+Relays CHORD events (from Redis) to front-ends via Socket.IO.

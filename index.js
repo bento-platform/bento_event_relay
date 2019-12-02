@@ -4,7 +4,32 @@ const http = require("http");
 const redis = require("redis");
 const socketIO = require("socket.io");
 
-const app = http.createServer((_, res) => {
+const pj = require("./package");
+
+const SERVICE_TYPE = `ca.c3g.chord:event-relay:${pj.version}`;
+const SERVICE_ID = process.env.SERVICE_ID || SERVICE_TYPE;
+
+const SERVICE_INFO = {
+    "id": SERVICE_ID,
+    "name": "CHORD Event Relay",
+    "type": SERVICE_TYPE,
+    "description": "Event relay for a CHORD application.",
+    "organization": {
+        "name": "C3G",
+        "url": "http://c3g.ca"
+    },
+    "contactUrl": "mailto:david.lougheed@mail.mcgill.ca",
+    "version": pj.version
+};
+
+
+const app = http.createServer((req, res) => {
+    if (req.url === "/service-info") {
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(SERVICE_INFO));
+        return;
+    }
+
     res.writeHead(404);
     res.end();
 });
