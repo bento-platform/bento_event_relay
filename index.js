@@ -36,14 +36,21 @@ const app = http.createServer((req, res) => {
     res.end();
 });
 
-const client = redis.createClient(process.env.REDIS_SOCKET || {});
-const io = socketIO(app, {path: SERVICE_URL_BASE_PATH + "/socket.io"});
+let socketID = 0;
+const connections = {};
 
+const io = socketIO(app, {path: SERVICE_URL_BASE_PATH + "/socket.io"});
 io.on("connection", socket => {
-    // TODO: Multiple clients??
-    client.on("pmessage", (_, message) => {
-        // TODO: Filter message type in relay
-        // TODO: Catch parse exceptions
+    const newSocketID = socketID++;
+    connections[newSocketID] = socket;
+    socket.on("disconnect", () => delete connections[newSocketID]);
+});
+
+const client = redis.createClient(process.env.REDIS_SOCKET || {});
+client.on("pmessage", (_, message) => {
+    // TODO: Filter message type in relay
+    // TODO: Catch parse exceptions
+    Object.values(connections).forEach(socket => {
         try {
             const messageData = JSON.parse(message);
             socket.emit("events", messageData);
