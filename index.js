@@ -43,6 +43,7 @@ const io = socketIO(app, {path: SERVICE_URL_BASE_PATH + "/socket.io"});
 io.on("connection", socket => {
     const newSocketID = socketID++;
     connections[newSocketID] = socket;
+    console.log("New connection made", socket);
     socket.on("disconnect", () => delete connections[newSocketID]);
 });
 
