@@ -37,7 +37,7 @@ const app = http.createServer((req, res) => {
 });
 
 const client = redis.createClient(process.env.REDIS_SOCKET || {});
-const io = socketIO(app);
+const io = socketIO(app, {path: SERVICE_URL_BASE_PATH + "/socket.io"});
 
 io.on("connection", socket => {
     // TODO: Multiple clients??
