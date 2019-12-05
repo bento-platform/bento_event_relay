@@ -26,6 +26,7 @@ const SERVICE_URL_BASE_PATH = process.env.SERVICE_URL_BASE_PATH || "";
 
 
 const app = http.createServer((req, res) => {
+    // Only respond to /service-info requests (to be CHORD-compatible)
     if (req.url === `${SERVICE_URL_BASE_PATH}/service-info`) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(SERVICE_INFO));
@@ -40,13 +41,18 @@ let socketID = 0;
 const connections = {};
 
 const io = socketIO(app, {path: SERVICE_URL_BASE_PATH + "/socket.io"});
+
+// Whenever a client connects via socket.io, keep track of their connection until disconnect
 io.on("connection", socket => {
     const newSocketID = socketID++;
     connections[newSocketID] = socket;
     socket.on("disconnect", () => delete connections[newSocketID]);
 });
 
+// Create a pub-sub client to listen for events
 const client = redis.createClient(process.env.REDIS_SOCKET || {});
+
+// Forward any message received to all currently-open socket.io connections
 client.on("pmessage", (_, message) => {
     // TODO: Filter message type in relay
     // TODO: Catch parse exceptions
@@ -59,11 +65,14 @@ client.on("pmessage", (_, message) => {
         }
     });
 });
+
+// Subscribe to all incoming messages
 client.psubscribe("*");
 
+// Listen on either a socket file (for production) or a development port
 app.listen(process.env.SERVICE_SOCKET || 8080);
 
+// Properly shut down (thus cleaning up any open socket files) when a signal is received
 const shutdown = () => app.close(() => process.exit());
-
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
