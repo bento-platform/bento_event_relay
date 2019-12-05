@@ -53,7 +53,7 @@ io.on("connection", socket => {
 const client = redis.createClient(process.env.REDIS_SOCKET || {});
 
 // Forward any message received to all currently-open socket.io connections
-client.on("pmessage", (_, message) => {
+client.on("pmessage", (pattern, channel, message) => {
     // TODO: Filter message type in relay
     // TODO: Catch parse exceptions
     Object.values(connections).forEach(socket => {
@@ -61,7 +61,8 @@ client.on("pmessage", (_, message) => {
             const messageData = JSON.parse(message);
             socket.emit("events", messageData);
         } catch (e) {
-            console.error(`Encountered error while relaying message: ${e}`);
+            console.error(`Encountered error while relaying message: ${e} (pattern: ${pattern}, channel: ${
+                channel}, message: ${message})`);
         }
     });
 });
