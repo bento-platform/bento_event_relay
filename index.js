@@ -68,7 +68,7 @@ client.on("pmessage", (pattern, channel, message) => {
 });
 
 // Subscribe to all incoming messages
-client.psubscribe("*");
+client.psubscribe("chord.*");
 
 // Listen on either a socket file (for production) or a development port
 app.listen(process.env.SERVICE_SOCKET || 8080);
