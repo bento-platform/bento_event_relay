@@ -59,6 +59,7 @@ client.on("pmessage", (_, message) => {
         }
     });
 });
+client.psubscribe("*");
 
 app.listen(process.env.SERVICE_SOCKET || 8080);
 
