@@ -58,8 +58,8 @@ client.on("pmessage", (pattern, channel, message) => {
     // TODO: Catch parse exceptions
     Object.values(connections).forEach(socket => {
         try {
-            const messageData = JSON.parse(message);
-            socket.emit("events", messageData);
+            // Include channel in message data, since otherwise the information is lost on the receiving end.
+            socket.emit("events", {...JSON.parse(message), channel});
         } catch (e) {
             console.error(`Encountered error while relaying message: ${e} (pattern: ${pattern}, channel: ${
                 channel}, message: ${message})`);
