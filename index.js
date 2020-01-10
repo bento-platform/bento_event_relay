@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+// Small service to forward CHORD-formatted events from Redis PubSub to a
+// socket.io connections (e.g. a JavaScript front-end.)
+// Author: David Lougheed <david.lougheed@mail.mcgill.ca>
+// Copyright: Canadian Centre for Computational Genomics, 2019-2020
+
 const http = require("http");
 const redis = require("redis");
 const socketIO = require("socket.io");
@@ -41,7 +46,7 @@ let socketID = 0;
 const connections = {};
 
 // TODO: Make private/ namespace optional
-const io = socketIO(app, {path: SERVICE_URL_BASE_PATH + "/private/socket.io"});
+const io = socketIO(app, {path: `${SERVICE_URL_BASE_PATH}/private/socket.io`});
 
 // Whenever a client connects via socket.io, keep track of their connection until disconnect
 io.on("connection", socket => {
@@ -56,7 +61,6 @@ const client = redis.createClient(process.env.REDIS_SOCKET || {});
 // Forward any message received to all currently-open socket.io connections
 client.on("pmessage", (pattern, channel, message) => {
     // TODO: Filter message type in relay
-    // TODO: Catch parse exceptions
     Object.values(connections).forEach(socket => {
         try {
             // Include channel in message data, since otherwise the information is lost on the receiving end.
