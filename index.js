@@ -41,7 +41,7 @@ let socketID = 0;
 const connections = {};
 
 // TODO: Make private/ namespace optional
-const io = socketIO(app, {path: SERVICE_URL_BASE_PATH + "private/socket.io"});
+const io = socketIO(app, {path: SERVICE_URL_BASE_PATH + "/private/socket.io"});
 
 // Whenever a client connects via socket.io, keep track of their connection until disconnect
 io.on("connection", socket => {
