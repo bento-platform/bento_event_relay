@@ -29,6 +29,8 @@ const SERVICE_INFO = {
 
 const SERVICE_URL_BASE_PATH = process.env.SERVICE_URL_BASE_PATH || "";
 
+const SOCKET_IO_PATH = process.env.SOCKET_IO_PATH || "/socket.io";
+
 
 const app = http.createServer((req, res) => {
     // Only respond to /service-info requests (to be CHORD-compatible)
@@ -45,8 +47,7 @@ const app = http.createServer((req, res) => {
 let socketID = 0;
 const connections = {};
 
-// TODO: Make private/ namespace optional
-const io = socketIO(app, {path: `${SERVICE_URL_BASE_PATH}/private/socket.io`});
+const io = socketIO(app, {path: `${SERVICE_URL_BASE_PATH}${SOCKET_IO_PATH}`});
 
 // Whenever a client connects via socket.io, keep track of their connection until disconnect
 io.on("connection", socket => {
