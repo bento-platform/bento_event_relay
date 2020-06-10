@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Small service to forward CHORD-formatted events from Redis PubSub to a
+// Small service to forward Bento-formatted events from Redis PubSub to a
 // socket.io connections (e.g. a JavaScript front-end.)
 // Author: David Lougheed <david.lougheed@mail.mcgill.ca>
 // Copyright: Canadian Centre for Computational Genomics, 2019-2020
@@ -11,14 +11,14 @@ const socketIO = require("socket.io");
 
 const pj = require("./package");
 
-const SERVICE_TYPE = `ca.c3g.chord:event-relay:${pj.version}`;
+const SERVICE_TYPE = `ca.c3g.bento:event-relay:${pj.version}`;
 const SERVICE_ID = process.env.SERVICE_ID || SERVICE_TYPE;
 
 const SERVICE_INFO = {
     "id": SERVICE_ID,
-    "name": "CHORD Event Relay",
+    "name": "Bento Event Relay",
     "type": SERVICE_TYPE,
-    "description": "Event relay for a CHORD application.",
+    "description": "Event relay for a Bento platform node.",
     "organization": {
         "name": "C3G",
         "url": "http://c3g.ca"

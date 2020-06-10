@@ -1,3 +1,3 @@
-# CHORD Event Relay
+# Bento Event Relay
 
-Relays CHORD events (from Redis) to front-ends via Socket.IO.
+Relays Bento events (from Redis) to front-ends via Socket.IO.
