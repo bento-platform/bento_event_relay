@@ -31,6 +31,8 @@ const SERVICE_URL_BASE_PATH = process.env.SERVICE_URL_BASE_PATH || "";
 
 const SOCKET_IO_PATH = process.env.SOCKET_IO_PATH || "/socket.io";
 
+const REDIS_SUBSCRIBE_PATTERN = "chord.*";
+
 
 const app = http.createServer((req, res) => {
     // Only respond to /service-info requests (to be CHORD-compatible)
@@ -74,7 +76,7 @@ client.on("pmessage", (pattern, channel, message) => {
 });
 
 // Subscribe to all incoming messages
-client.psubscribe("chord.*");
+client.psubscribe(REDIS_SUBSCRIBE_PATTERN);
 
 // Listen on either a socket file (for production) or a development port
 app.listen(process.env.SERVICE_SOCKET || 8080);
