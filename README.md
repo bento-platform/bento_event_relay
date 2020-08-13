@@ -15,7 +15,7 @@ All configuration is done via environment variables:
 # {"test": true, "channel": "chord.something"}
 # Otherwise, the message will be:
 # {"message": "{\"test\": true}", "channel": "chord.something"}
-JSON_MESSAGES=true 
+JSON_MESSAGES="true" 
 
 # Default: blank, base path for the service-info endpoint
 # If blank, the service-info endpoint will be mounted on /service-info
@@ -23,7 +23,7 @@ JSON_MESSAGES=true
 SERVICE_URL_BASE_PATH=
 
 # socket.io "path" for the server created by the service.
-SOCKET_IO_PATH=/socket.io
+SOCKET_IO_PATH="/socket.io"
 
 # Connection string (URL or path to UNIX socket file) for the Redis instance.
 REDIS_CONNECTION=
@@ -31,7 +31,7 @@ REDIS_CONNECTION=
 # Subscription pattern the Redis PubSub connection. The default is configured
 # to be chord.* for the Bento platform, but it can be set to anything.
 # See https://redis.io/topics/pubsub and specifically the pattern-matching.
-REDIS_SUBSCRIBE_PATTERN=chord.*
+REDIS_SUBSCRIBE_PATTERN="chord.*"
 ```
 
 ## HTTP Endpoints
