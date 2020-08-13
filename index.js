@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-// Small service to forward Bento-formatted events from Redis PubSub to a
-// socket.io connections (e.g. a JavaScript front-end.)
+// Small service to forward events from Redis PubSub to socket.io connections
+// (e.g. a JavaScript front-end.)
 // Author: David Lougheed <david.lougheed@mail.mcgill.ca>
 // Copyright: Canadian Centre for Computational Genomics, 2019-2020
 
@@ -18,7 +18,7 @@ const SERVICE_INFO = {
     "id": SERVICE_ID,
     "name": "Bento Event Relay",
     "type": SERVICE_TYPE,
-    "description": "Event relay for a Bento platform node.",
+    "description": "Event relay from Redis PubSub events to socket.io.",
     "organization": {
         "name": "C3G",
         "url": "http://c3g.ca"
@@ -27,11 +27,11 @@ const SERVICE_INFO = {
     "version": pj.version
 };
 
+const JSON_MESSAGES = (process.env.JSON_MESSAGES || "true").trim().toLocaleLowerCase() === "true";
+const REDIS_CONNECTION = process.env.REDIS_CONNECTION;
+const REDIS_SUBSCRIBE_PATTERN = process.env.REDIS_SUBSCRIBE_PATTERN || "chord.*";
 const SERVICE_URL_BASE_PATH = process.env.SERVICE_URL_BASE_PATH || "";
-
 const SOCKET_IO_PATH = process.env.SOCKET_IO_PATH || "/socket.io";
-
-const REDIS_SUBSCRIBE_PATTERN = "chord.*";
 
 
 const app = http.createServer((req, res) => {
@@ -59,7 +59,7 @@ io.on("connection", socket => {
 });
 
 // Create a pub-sub client to listen for events
-const client = redis.createClient(process.env.REDIS_SOCKET || {});
+const client = redis.createClient(REDIS_CONNECTION || {});
 
 // Forward any message received to all currently-open socket.io connections
 client.on("pmessage", (pattern, channel, message) => {
@@ -67,7 +67,9 @@ client.on("pmessage", (pattern, channel, message) => {
     Object.values(connections).forEach(socket => {
         try {
             // Include channel in message data, since otherwise the information is lost on the receiving end.
-            socket.emit("events", {...JSON.parse(message), channel});
+            // If we're in "generic mode" (i.e. JSON_MESSAGES is false) then the message is passed as the single key in
+            // an event object; otherwise, pass the deserialized data.
+            socket.emit("events", {message: JSON_MESSAGES ? JSON.parse(message) : message, channel});
         } catch (e) {
             console.error(`Encountered error while relaying message: ${e} (pattern: ${pattern}, channel: ${
                 channel}, message: ${message})`);
