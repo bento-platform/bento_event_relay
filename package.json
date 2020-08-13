@@ -1,7 +1,7 @@
 {
   "name": "bento_event_relay",
-  "version": "0.3.1",
-  "description": "Event relay service for Bento platform nodes.",
+  "version": "0.4.0",
+  "description": "Event relay service from Redis PubSub to socket.io",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
