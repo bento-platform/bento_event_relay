@@ -12,7 +12,7 @@ All configuration is done via environment variables:
 # and de-serialize them before passing them to the socket.io connection.
 # e.g. If the message {"test": true} is passed with JSON_MESSAGES on, the
 # corresponding socket.io message will be:
-# {"test": true, "channel": "chord.something"}
+# {"message": {"test": true}, "channel": "chord.something"}
 # Otherwise, the message will be:
 # {"message": "{\"test\": true}", "channel": "chord.something"}
 JSON_MESSAGES="true" 
