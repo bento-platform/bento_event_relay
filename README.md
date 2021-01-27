@@ -32,6 +32,12 @@ REDIS_CONNECTION=
 # to be chord.* for the Bento platform, but it can be set to anything.
 # See https://redis.io/topics/pubsub and specifically the pattern-matching.
 REDIS_SUBSCRIBE_PATTERN="chord.*"
+
+# Where the service will listen for requests. Can be a UNIX socket path or a
+# port number (e.g. 8080, which is the default value if nothing is set.)
+# Will also check the SERVICE_SOCKET environment variable for legacy reasons
+# related to the Bento platform.
+SERVICE_LISTEN_ON="/path/to/event_relay.sock"
 ```
 
 ## HTTP Endpoints

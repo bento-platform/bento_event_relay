@@ -3,13 +3,15 @@
 // Small service to forward events from Redis PubSub to socket.io connections
 // (e.g. a JavaScript front-end.)
 // Author: David Lougheed <david.lougheed@mail.mcgill.ca>
-// Copyright: Canadian Centre for Computational Genomics, 2019-2020
+// Copyright: Canadian Centre for Computational Genomics, 2019-2021
 
 const http = require("http");
 const redis = require("redis");
 const socketIO = require("socket.io");
 
 const pj = require("./package");
+
+const parseIntIfInt = v => v && v.toString().match(/^\d+$/) ? parseInt(v, 10) : v;
 
 const SERVICE_TYPE = `ca.c3g.bento:event-relay:${pj.version}`;
 const SERVICE_ID = process.env.SERVICE_ID || SERVICE_TYPE;
@@ -32,6 +34,10 @@ const REDIS_CONNECTION = process.env.REDIS_CONNECTION;
 const REDIS_SUBSCRIBE_PATTERN = process.env.REDIS_SUBSCRIBE_PATTERN || "chord.*";
 const SERVICE_URL_BASE_PATH = process.env.SERVICE_URL_BASE_PATH || "";
 const SOCKET_IO_PATH = process.env.SOCKET_IO_PATH || "/socket.io";
+
+// Listen on a port or socket file if specified; default to 8080 if not
+// Also check SERVICE_SOCKET, where chord_singularity passes pre-set socket paths to services
+const SERVICE_LISTEN_ON = parseIntIfInt(process.env.SERVICE_LISTEN_ON || process.env.SERVICE_SOCKET || 8080);
 
 
 const app = http.createServer((req, res) => {
@@ -80,8 +86,8 @@ client.on("pmessage", (pattern, channel, message) => {
 // Subscribe to all incoming messages
 client.psubscribe(REDIS_SUBSCRIBE_PATTERN);
 
-// Listen on either a socket file (for production) or a development port
-app.listen(process.env.SERVICE_SOCKET || 8080);
+// Listen on a socket file or port
+app.listen(SERVICE_LISTEN_ON);
 
 // Properly shut down (thus cleaning up any open socket files) when a signal is received
 const shutdown = () => app.close(() => process.exit());
