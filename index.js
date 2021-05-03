@@ -23,7 +23,7 @@ const SERVICE_INFO = {
     "description": "Event relay from Redis PubSub events to socket.io.",
     "organization": {
         "name": "C3G",
-        "url": "http://c3g.ca"
+        "url": "https://www.computationalgenomics.ca/"
     },
     "contactUrl": "mailto:david.lougheed@mail.mcgill.ca",
     "version": pj.version
@@ -52,16 +52,9 @@ const app = http.createServer((req, res) => {
     res.end();
 });
 
-let socketID = 0;
-const connections = {};
-
-const io = socketIO(app, {path: `${SERVICE_URL_BASE_PATH}${SOCKET_IO_PATH}`});
-
-// Whenever a client connects via socket.io, keep track of their connection until disconnect
-io.on("connection", socket => {
-    const newSocketID = socketID++;
-    connections[newSocketID] = socket;
-    socket.on("disconnect", () => delete connections[newSocketID]);
+const io = new socketIO.Server(app, {
+    path: `${SERVICE_URL_BASE_PATH}${SOCKET_IO_PATH}`,
+    serveClient: false,
 });
 
 // Create a pub-sub client to listen for events
@@ -70,7 +63,7 @@ const client = redis.createClient(REDIS_CONNECTION || {});
 // Forward any message received to all currently-open socket.io connections
 client.on("pmessage", (pattern, channel, message) => {
     // TODO: Filter message type in relay
-    Object.values(connections).forEach(socket => {
+    for (const socket of io.of("/").sockets.values()) {
         try {
             // Include channel in message data, since otherwise the information is lost on the receiving end.
             // If we're in "generic mode" (i.e. JSON_MESSAGES is false) then the message is passed as the single key in
@@ -80,7 +73,7 @@ client.on("pmessage", (pattern, channel, message) => {
             console.error(`Encountered error while relaying message: ${e} (pattern: ${pattern}, channel: ${
                 channel}, message: ${message})`);
         }
-    });
+    }
 });
 
 // Subscribe to all incoming messages
@@ -88,6 +81,7 @@ client.psubscribe(REDIS_SUBSCRIBE_PATTERN);
 
 // Listen on a socket file or port
 app.listen(SERVICE_LISTEN_ON);
+console.log(`bento_event_relay listening on ${SERVICE_LISTEN_ON}`);
 
 // Properly shut down (thus cleaning up any open socket files) when a signal is received
 const shutdown = () => app.close(() => process.exit());
