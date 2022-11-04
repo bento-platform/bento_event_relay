@@ -27,10 +27,10 @@ const SERVICE_INFO = {
     "description": "Event relay from Redis PubSub events to socket.io.",
     "organization": {
         "name": "C3G",
-        "url": "https://www.computationalgenomics.ca/"
+        "url": "https://www.computationalgenomics.ca/",
     },
     "contactUrl": "mailto:david.lougheed@mail.mcgill.ca",
-    "version": pj.version
+    "version": pj.version,
 };
 
 const JSON_MESSAGES = (process.env.JSON_MESSAGES || "true").trim().toLocaleLowerCase() === "true";
