@@ -25,7 +25,7 @@ SERVICE_URL_BASE_PATH=
 # socket.io "path" for the server created by the service.
 SOCKET_IO_PATH="/socket.io"
 
-# Connection string (URL or path to UNIX socket file) for the Redis instance.
+# Connection string (redis:// URL or path to UNIX socket file) for the Redis instance.
 REDIS_CONNECTION=
 
 # Subscription pattern the Redis PubSub connection. The default is configured
@@ -37,6 +37,7 @@ REDIS_SUBSCRIBE_PATTERN="chord.*"
 # port number (e.g. 8080, which is the default value if nothing is set.)
 # Will also check the SERVICE_SOCKET environment variable for legacy reasons
 # related to the Bento platform.
+SERVICE_LISTEN_ON=8080
 SERVICE_LISTEN_ON="/path/to/event_relay.sock"
 ```
 
