@@ -22,8 +22,9 @@ JSON_MESSAGES="true"
 # If e.g. /base, the endpoint will be mounted on /base/service-info
 SERVICE_URL_BASE_PATH=
 
-# socket.io "path" for the server created by the service.
-SOCKET_IO_PATH="/socket.io"
+# socket.io "path" for the server created by the service. Socket.io requires
+# a trailing slash.
+SOCKET_IO_PATH="/socket.io/"
 
 # Connection string (redis:// URL or path to UNIX socket file) for the Redis instance.
 REDIS_CONNECTION=

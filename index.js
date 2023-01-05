@@ -39,6 +39,7 @@ const REDIS_CONNECTION = process.env.REDIS_CONNECTION || "redis://localhost:6379
 const REDIS_SUBSCRIBE_PATTERN = process.env.REDIS_SUBSCRIBE_PATTERN || "chord.*";
 const SERVICE_URL_BASE_PATH = process.env.SERVICE_URL_BASE_PATH || "";
 const SOCKET_IO_PATH = process.env.SOCKET_IO_PATH || "/socket.io/";
+const SOCKET_IO_FULL_PATH = `${SERVICE_URL_BASE_PATH}${SOCKET_IO_PATH}`;
 
 // Listen on a port or socket file if specified; default to 8080 if not
 // Also check SERVICE_SOCKET, where chord_singularity passes pre-set socket paths to services
@@ -46,21 +47,21 @@ const SERVICE_LISTEN_ON = parseIntIfInt(process.env.SERVICE_LISTEN_ON || process
 
 
 const app = http.createServer((req, res) => {
-    // Only respond to /service-info requests (to be CHORD-compatible)
+    // Only respond to /service-info requests and socket.io stuff in HTTP handler
+
     if (req.url.startsWith(`${SERVICE_URL_BASE_PATH}/service-info`)) {
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(SERVICE_INFO));
-        return;
+    } else if (!req.url.startsWith(SOCKET_IO_FULL_PATH)) {
+        // Not /service-info or /socket.io/ [or similar], so return a 404.
+        console.error(`[${SERVICE_NAME}] 404: ${req.url}`);
+        res.writeHead(404);
+        res.end();
     }
-
-    console.error(`[${SERVICE_NAME}] 404: ${req.url}`);
-
-    res.writeHead(404);
-    res.end();
 });
 
 const io = new socketIO.Server(app, {
-    path: `${SERVICE_URL_BASE_PATH}${SOCKET_IO_PATH}`,
+    path: SOCKET_IO_FULL_PATH,
     serveClient: false,
 });
 
