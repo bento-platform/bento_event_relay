@@ -61,7 +61,7 @@ const app = http.createServer((req, res) => {
 });
 
 const io = new socketIO.Server(app, {
-    path: `${SERVICE_URL_BASE_PATH}${SOCKET_IO_PATH}`,
+    path: SOCKET_IO_FULL_PATH,
     serveClient: false,
 });
 
