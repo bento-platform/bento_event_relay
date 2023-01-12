@@ -13,9 +13,10 @@ const pj = require("./package");
 
 const parseIntIfInt = v => v && v.toString().match(/^\d+$/) ? parseInt(v, 10) : v;
 
+const BENTO_SERVICE_TYPE = "event-relay"
 const SERVICE_TYPE = {
     "group": "ca.c3g.bento",
-    "artifact": "event-relay",
+    "artifact": BENTO_SERVICE_TYPE,
     "version": pj.version,
 };
 const SERVICE_ID = process.env.SERVICE_ID || Object.values(SERVICE_TYPE).slice(0, 2).join(":");
@@ -32,6 +33,9 @@ const SERVICE_INFO = {
     },
     "contactUrl": "mailto:david.lougheed@mail.mcgill.ca",
     "version": pj.version,
+    "bento": {
+        "serviceType": BENTO_SERVICE_TYPE,
+    },
 };
 
 const JSON_MESSAGES = (process.env.JSON_MESSAGES || "true").trim().toLocaleLowerCase() === "true";
