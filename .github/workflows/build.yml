@@ -28,5 +28,5 @@ jobs:
           registry-username: ${{ github.actor }}
           registry-password: ${{ secrets.GITHUB_TOKEN }}
           image-name: ghcr.io/bento-platform/bento_event_relay
-          development-dockerfile: Dockerfile
+          development-dockerfile: dev.Dockerfile
           production-dockerfile: Dockerfile
