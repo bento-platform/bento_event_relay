@@ -40,7 +40,7 @@ const SERVICE_INFO = {
 
 const JSON_MESSAGES = (process.env.JSON_MESSAGES || "true").trim().toLocaleLowerCase() === "true";
 const REDIS_CONNECTION = process.env.REDIS_CONNECTION || "redis://localhost:6379";
-const REDIS_SUBSCRIBE_PATTERN = process.env.REDIS_SUBSCRIBE_PATTERN || "chord.*";
+const REDIS_SUBSCRIBE_PATTERN = process.env.REDIS_SUBSCRIBE_PATTERN || "bento.*";
 const SERVICE_URL_BASE_PATH = process.env.SERVICE_URL_BASE_PATH || "";
 const SOCKET_IO_PATH = process.env.SOCKET_IO_PATH || "/socket.io/";
 const SOCKET_IO_FULL_PATH = `${SERVICE_URL_BASE_PATH}${SOCKET_IO_PATH}`;
