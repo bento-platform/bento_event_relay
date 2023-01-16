@@ -81,18 +81,22 @@ const client = redis.createClient({
     // Subscribe to all incoming messages
     // Forward any message received to all currently-open socket.io connections
     await client.pSubscribe(REDIS_SUBSCRIBE_PATTERN, (message, channel) => {
-        // TODO: Filter message type in relay
-        for (const socket of io.of("/").sockets.values()) {
-            try {
-                // Include channel in message data, since otherwise the information is lost on the receiving end.
-                // If we're in "generic mode" (i.e. JSON_MESSAGES is false) then the message is passed as the single key in
-                // an event object; otherwise, pass the deserialized data.
-                socket.emit("events", {message: JSON_MESSAGES ? JSON.parse(message) : message, channel});
-            } catch (e) {
-                console.error(`Encountered error while relaying message: ${e} (pattern: ${pattern}, channel: ${
-                    channel}, message: ${message})`);
+        (async () => {
+            // TODO: Filter message type in relay - security / traffic reduction
+            for (const socket of (await io.fetchSockets())) {
+                try {
+                    // Include channel in message data, since otherwise the information is lost on the receiving end.
+                    // If we're in "generic mode" (i.e. JSON_MESSAGES is false) then the message is passed as the single
+                    // key in an event object; otherwise, pass the deserialized data.
+                    socket.emit("events", {message: JSON_MESSAGES ? JSON.parse(message) : message, channel});
+                } catch (e) {
+                    console.error(
+                        `Encountered error while relaying message: ${e} 
+                        (pattern: ${REDIS_SUBSCRIBE_PATTERN}, channel: ${channel}, message: ${message})`
+                    );
+                }
             }
-        }
+        })();
     });
 
     // Listen on a socket file or port
