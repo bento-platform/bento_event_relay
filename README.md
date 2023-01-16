@@ -8,7 +8,7 @@ the Bento platform, but can be used in a more generic context if needed.
 All configuration is done via environment variables:
 
 ```bash
-# If true, JSON_MESSAGES will parse all messages recieved from the subscription
+# If true, JSON_MESSAGES will parse all messages received from the subscription
 # and de-serialize them before passing them to the socket.io connection.
 # e.g. If the message {"test": true} is passed with JSON_MESSAGES on, the
 # corresponding socket.io message will be:
