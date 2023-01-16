@@ -42,6 +42,21 @@ SERVICE_LISTEN_ON=8080
 SERVICE_LISTEN_ON="/path/to/event_relay.sock"
 ```
 
+## Starting
+
+To start `bento_event_relay` in "production" mode, run the following:
+
+```bash
+NODE_ENV=production npm run start
+````
+
+To start it in "development" mode (with automatic restart on file changes), 
+run the following:
+
+```bash
+NODE_ENV=development npx nodemon
+```
+
 ## HTTP Endpoints
 
 The `bento_event_relay` service only has one HTTP endpoint, `/service-info`,
