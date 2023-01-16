@@ -30,7 +30,7 @@ SOCKET_IO_PATH="/socket.io/"
 REDIS_CONNECTION=
 
 # Subscription pattern the Redis PubSub connection. The default is configured
-# to be chord.* for the Bento platform, but it can be set to anything.
+# to the below value for the Bento platform, but it can be set to anything.
 # See https://redis.io/topics/pubsub and specifically the pattern-matching.
 REDIS_SUBSCRIBE_PATTERN="bento.*"
 
