@@ -1,4 +1,4 @@
-FROM node:18-bullseye-slim
+FROM ghcr.io/bento-platform/bento_base_image:node-debian-2023.02.09
 
 WORKDIR /app
 
@@ -9,4 +9,4 @@ RUN npm ci --production
 
 COPY . .
 
-ENTRYPOINT [ "sh", "./entrypoint.sh" ]
+ENTRYPOINT [ "bash", "./entrypoint.bash" ]

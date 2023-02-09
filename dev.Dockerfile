@@ -7,4 +7,4 @@ COPY package-lock.json package-lock.json
 
 RUN npm ci
 
-ENTRYPOINT ["sh", "./entrypoint.dev.sh"]
+ENTRYPOINT ["bash", "./entrypoint.dev.bash"]

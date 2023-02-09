@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -z "${INTERNAL_PORT}" ]; then
   # Set default internal port to 8080
