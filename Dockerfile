@@ -1,4 +1,4 @@
-FROM ghcr.io/bento-platform/bento_base_image:node-debian-2023.02.09
+FROM ghcr.io/bento-platform/bento_base_image:node-debian-2023.02.21
 
 WORKDIR /app
 
@@ -9,4 +9,4 @@ RUN npm ci --production
 
 COPY . .
 
-ENTRYPOINT [ "bash", "./entrypoint.bash" ]
+CMD [ "bash", "./run.bash" ]
