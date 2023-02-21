@@ -33,6 +33,7 @@ const SERVICE_INFO = {
     },
     "contactUrl": "mailto:david.lougheed@mail.mcgill.ca",
     "version": pj.version,
+    "environment": process.env.NODE_ENV === "development" ? "dev" : "prod",
     "bento": {
         "serviceKind": BENTO_SERVICE_KIND,
     },
