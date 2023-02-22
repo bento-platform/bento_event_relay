@@ -3,7 +3,7 @@
 # Set .gitconfig for development
 /set_gitconfig.bash
 
-if [ -z "${INTERNAL_PORT}" ]; then
+if [[ -z "${INTERNAL_PORT}" ]]; then
   # Set default internal port to 8080
   export INTERNAL_PORT=8080
 fi
