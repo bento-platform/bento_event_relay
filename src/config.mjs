@@ -29,6 +29,8 @@ export const SERVICE_INFO = {
     },
 };
 
+export const BENTO_DEBUG = ["true", "1", "yes"].includes((process.env.BENTO_DEBUG || "").toLocaleLowerCase());
+
 export const JSON_MESSAGES = (process.env.JSON_MESSAGES || "true").trim().toLocaleLowerCase() === "true";
 export const REDIS_CONNECTION = process.env.REDIS_CONNECTION || "redis://localhost:6379";
 export const REDIS_SUBSCRIBE_PATTERN = process.env.REDIS_SUBSCRIBE_PATTERN || "bento.*";
