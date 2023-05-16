@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/bento-platform/bento_event_relay#readme",
   "dependencies": {
+    "jose": "^4.14.4",
+    "node-fetch": "^3.3.1",
     "redis": "^4.6.6",
     "socket.io": "^4.6.1"
   },
