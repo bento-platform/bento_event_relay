@@ -39,7 +39,5 @@ export const SOCKET_IO_PATH = process.env.SOCKET_IO_PATH || "/socket.io/";
 // Also check SERVICE_SOCKET, where chord_singularity passes pre-set socket paths to services
 export const SERVICE_LISTEN_ON = parseIntIfInt(process.env.SERVICE_LISTEN_ON || process.env.SERVICE_SOCKET || 8080);
 
-// For authentication
-export const OPENID_CONFIG_URL = process.env.OPENID_CONFIG_URL
-    || "https://bentov2auth.local/realms/bentov2/.well-known/openid-configuration";
-export const OPENID_TOKEN_AUDIENCE = "account";
+// For authentication/authorization
+export const BENTO_AUTHZ_SERVICE_URL = process.env.BENTO_AUTHZ_SERVICE_URL;

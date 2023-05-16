@@ -6,7 +6,6 @@
 // Copyright: Canadian Centre for Computational Genomics, 2019-2023
 
 import http from "http";
-import fetch from "node-fetch";
 import redis from "redis";
 import socketIO from "socket.io";
 
@@ -19,9 +18,8 @@ import {
     REDIS_SUBSCRIBE_PATTERN,
     SERVICE_LISTEN_ON,
     JSON_MESSAGES,
-    OPENID_CONFIG_URL,
 } from "./config.mjs";
-import {verifyToken} from "./auth.mjs";
+import {checkAgainstAuthorizationService} from "./auth.mjs";
 
 const SOCKET_IO_FULL_PATH = `${SERVICE_URL_BASE_PATH}${SOCKET_IO_PATH}`;
 
@@ -49,12 +47,6 @@ const client = redis.createClient({
     url: REDIS_CONNECTION,
 });
 
-const OPENID_CONFIG_EXPIRY = 3600;  // OpenID config cache lasts an hour
-
-// TODO: namespaced
-const REDIS_KEY_OPENID_CONFIG = "event-relay:openid-config";
-const REDIS_KEY_OPENID_CONFIG_EXP = `${REDIS_KEY_OPENID_CONFIG}-exp`;
-
 (async () => {
     await client.connect();
 
@@ -63,41 +55,11 @@ const REDIS_KEY_OPENID_CONFIG_EXP = `${REDIS_KEY_OPENID_CONFIG}-exp`;
         const {token} = socket.handshake.auth;
 
         ((async () => {
-            // noinspection JSCheckFunctionSignatures
-            let config = await client.get(REDIS_KEY_OPENID_CONFIG);
-            // noinspection JSCheckFunctionSignatures
-            const exp = await client.get(REDIS_KEY_OPENID_CONFIG_EXP);
-
-            if (!config || !exp || (new Date()).getTime() - exp > OPENID_CONFIG_EXPIRY) {
-                // Refresh OpenID config
-                const res = await fetch(OPENID_CONFIG_URL);
-                if (!res.ok) {
-                    console.error(`Received error response from OpenID config URL: ${res.status} ${await res.text()}`);
-                    return;
-                }
-
-                try {
-                    config = await res.json();
-                    // noinspection JSCheckFunctionSignatures
-                    await client.set(REDIS_KEY_OPENID_CONFIG, JSON.stringify(config));
-                    // noinspection JSCheckFunctionSignatures
-                    await client.set(REDIS_KEY_OPENID_CONFIG_EXP, (new Date()).getTime());
-                } catch (e) {
-                    console.error("Could not decode OpenID config:", e);
-                }
-            }
-
-            if (!config) {
-                console.error("Could not obtain OpenID config");
-                return;
-            }
-
-            try {
-                await verifyToken(token, config["issuer"], config["jwks_uri"]);
+            const res = await checkAgainstAuthorizationService(token);
+            if (res) {
                 next();
-            } catch (e) {
-                console.warn("Encountered invalid token. Error: ", e);
-                next(e);
+            } else {
+                next(new Error("forbidden"));
             }
         })());
     });
