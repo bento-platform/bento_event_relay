@@ -7,7 +7,7 @@
 
 import http from "http";
 import redis from "redis";
-import socketIO from "socket.io";
+import * as socketIO from "socket.io";
 
 import {
     SERVICE_URL_BASE_PATH,
