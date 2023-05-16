@@ -9,7 +9,7 @@ const http = require("http");
 const redis = require("redis");
 const socketIO = require("socket.io");
 
-const pj = require("./package");
+const pj = require("../package.json");
 
 const parseIntIfInt = v => v && v.toString().match(/^\d+$/) ? parseInt(v, 10) : v;
 
