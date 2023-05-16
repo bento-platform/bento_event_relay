@@ -13,6 +13,7 @@ import {
     SERVICE_URL_BASE_PATH,
     SERVICE_INFO,
     SOCKET_IO_PATH,
+    SOCKET_IO_CORS_ORIGINS,
     SERVICE_NAME,
     REDIS_CONNECTION,
     REDIS_SUBSCRIBE_PATTERN,
@@ -38,6 +39,9 @@ const app = http.createServer((req, res) => {
 });
 
 const io = new socketIO.Server(app, {
+    cors: {
+        origin: SOCKET_IO_CORS_ORIGINS,
+    },
     path: SOCKET_IO_FULL_PATH,
     serveClient: false,
 });
