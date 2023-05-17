@@ -1,8 +1,7 @@
 #!/bin/bash
 
-if [[ -z "${INTERNAL_PORT}" ]]; then
-  # Set default internal port to 8080
-  export INTERNAL_PORT=8080
-fi
+# Set default internal port to 8080
+: "${INTERNAL_PORT:=8080}"
 
+# Start the server
 npm run start
