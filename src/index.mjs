@@ -33,6 +33,7 @@ const app = http.createServer((req, res) => {
             ...(currentOrigin ? {
                 "Access-Control-Allow-Origin": currentOrigin,
                 "Access-Control-Allow-Credentials": "true",
+                "Access-Control-Allow-Headers": "authorization",
             } : {}),
             "Content-Type": "application/json",
         });
