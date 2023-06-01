@@ -36,7 +36,7 @@ export const REDIS_CONNECTION = process.env.REDIS_CONNECTION || "redis://localho
 export const REDIS_SUBSCRIBE_PATTERN = process.env.REDIS_SUBSCRIBE_PATTERN || "bento.*";
 export const SERVICE_URL_BASE_PATH = process.env.SERVICE_URL_BASE_PATH || "";
 
-export const SOCKET_IO_CORS_ORIGINS = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(";") : undefined;
+export const CORS_ORIGINS = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(";") : undefined;
 export const SOCKET_IO_PATH = process.env.SOCKET_IO_PATH || "/socket.io/";
 
 // Listen on a port or socket file if specified; default to 8080 if not

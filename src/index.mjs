@@ -13,7 +13,7 @@ import {
     SERVICE_URL_BASE_PATH,
     SERVICE_INFO,
     SOCKET_IO_PATH,
-    SOCKET_IO_CORS_ORIGINS,
+    CORS_ORIGINS,
     SERVICE_NAME,
     REDIS_CONNECTION,
     REDIS_SUBSCRIBE_PATTERN,
@@ -28,7 +28,11 @@ const app = http.createServer((req, res) => {
     // Only respond to /service-info requests and socket.io stuff in HTTP handler
 
     if (req.url.startsWith(`${SERVICE_URL_BASE_PATH}/service-info`)) {
-        res.writeHead(200, {"Content-Type": "application/json"});
+        const currentOrigin = CORS_ORIGINS.find(origin => origin === req.headers.origin);
+        res.writeHead(200, {
+            ...(currentOrigin ? {"Access-Control-Allow-Origin": currentOrigin} : {}),
+            "Content-Type": "application/json",
+        });
         res.end(JSON.stringify(SERVICE_INFO));
     } else if (!req.url.startsWith(SOCKET_IO_FULL_PATH)) {
         // Not /service-info or /socket.io/ [or similar], so return a 404.
@@ -40,7 +44,7 @@ const app = http.createServer((req, res) => {
 
 const io = new socketIO.Server(app, {
     cors: {
-        origin: SOCKET_IO_CORS_ORIGINS,
+        origin: CORS_ORIGINS,
     },
     path: SOCKET_IO_FULL_PATH,
     serveClient: false,
