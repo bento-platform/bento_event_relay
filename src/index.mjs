@@ -30,7 +30,10 @@ const app = http.createServer((req, res) => {
     if (req.url.startsWith(`${SERVICE_URL_BASE_PATH}/service-info`)) {
         const currentOrigin = CORS_ORIGINS.find(origin => origin === req.headers.origin);
         res.writeHead(200, {
-            ...(currentOrigin ? {"Access-Control-Allow-Origin": currentOrigin} : {}),
+            ...(currentOrigin ? {
+                "Access-Control-Allow-Origin": currentOrigin,
+                "Access-Control-Allow-Credentials": "true",
+            } : {}),
             "Content-Type": "application/json",
         });
         res.end(JSON.stringify(SERVICE_INFO));
