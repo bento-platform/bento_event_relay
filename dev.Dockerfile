@@ -1,11 +1,11 @@
-FROM ghcr.io/bento-platform/bento_base_image:node-debian-2023.05.12
+FROM ghcr.io/bento-platform/bento_base_image:node-debian-2023.09.08
 
 WORKDIR /app
 
-COPY package.json .
-COPY package-lock.json .
 COPY entrypoint.bash .
 COPY run.dev.bash .
+COPY package.json .
+COPY package-lock.json .
 
 RUN npm ci
 
