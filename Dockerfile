@@ -1,4 +1,4 @@
-FROM ghcr.io/bento-platform/bento_base_image:node-debian-2023.05.12
+FROM ghcr.io/bento-platform/bento_base_image:node-debian-2023.09.08
 
 WORKDIR /app
 
