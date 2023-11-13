@@ -13,16 +13,16 @@ export const checkAgainstAuthorizationService = async (token) => {
     }
 
     try {
-        const res = await fetch(`${BENTO_AUTHZ_SERVICE_URL}policy/evaluate`, {
+        const res = await fetch(`${BENTO_AUTHZ_SERVICE_URL}policy/evaluate_one`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                requested_resource: {everything: true},
+                resource: {everything: true},
                 // TODO: granular permissions + message filtering instead:
-                required_permissions: ["view:private_portal"],
+                permission: "view:private_portal",
             }),
             agent: httpsAgent,
         });
