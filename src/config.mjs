@@ -1,4 +1,4 @@
-import pj from "../package.json" assert {type: "json"};
+import pj from "../package.json" with {type: "json"};
 
 const parseIntIfInt = v => v && v.toString().match(/^\d+$/) ? parseInt(v, 10) : v;
 
