@@ -3,7 +3,7 @@
 // Small service to forward events from Redis PubSub to socket.io connections
 // (e.g. a JavaScript front-end.)
 // Author: David Lougheed <david.lougheed@mail.mcgill.ca>
-// Copyright: Canadian Centre for Computational Genomics, 2019-2023
+// Copyright: Canadian Centre for Computational Genomics, 2019-2025
 
 import http from "http";
 import redis from "redis";
@@ -21,6 +21,7 @@ import {
     JSON_MESSAGES,
 } from "./config.mjs";
 import {checkAgainstAuthorizationService} from "./auth.mjs";
+import logger from "./logger.mjs";
 
 const SOCKET_IO_FULL_PATH = `${SERVICE_URL_BASE_PATH}${SOCKET_IO_PATH}`;
 
@@ -77,10 +78,16 @@ const client = redis.createClient({
     });
     // TODO: system for token refresh + continued authentication with socket.io
 
+    const subLogger = logger.child({
+        pattern: REDIS_SUBSCRIBE_PATTERN,
+    })
+
     // Subscribe to all incoming messages
     // Forward any message received to all currently-open socket.io connections
     await client.pSubscribe(REDIS_SUBSCRIBE_PATTERN, (message, channel) => {
         (async () => {
+            const msgLogger = subLogger.child({ channel, message });
+            msgLogger.debug("received message");
             // TODO: Filter message type in relay - security / traffic reduction
             for (const socket of (await io.fetchSockets())) {
                 try {
@@ -89,10 +96,7 @@ const client = redis.createClient({
                     // key in an event object; otherwise, pass the deserialized data.
                     socket.emit("events", {message: JSON_MESSAGES ? JSON.parse(message) : message, channel});
                 } catch (e) {
-                    console.error(
-                        `Encountered error while relaying message: ${e} 
-                        (pattern: ${REDIS_SUBSCRIBE_PATTERN}, channel: ${channel}, message: ${message})`
-                    );
+                    msgLogger.child({ error: e }).error("encountered error while relaying message");
                 }
             }
         })();
@@ -100,14 +104,17 @@ const client = redis.createClient({
 
     // Listen on a socket file or port
     app.listen(SERVICE_LISTEN_ON);
-    console.log(`bento_event_relay listening on ${SERVICE_LISTEN_ON}`);
-    console.log("config:");
-    console.log(`\tJSON_MESSAGES=${JSON_MESSAGES}`);
-    console.log(`\tREDIS_CONNECTION=${REDIS_CONNECTION}`);
-    console.log(`\tREDIS_SUBSCRIBE_PATTERN=${REDIS_SUBSCRIBE_PATTERN}`);
-    console.log(`\tSERVICE_URL_BASE_PATH=${SERVICE_URL_BASE_PATH}`);
-    console.log(`\tSOCKET_IO_PATH=${SOCKET_IO_PATH}`);
-    console.log(`\tSERVICE_LISTEN_ON=${SERVICE_LISTEN_ON}`);
+    logger.child({
+        port: SERVICE_LISTEN_ON,
+        config: {
+            JSON_MESSAGES,
+            REDIS_CONNECTION,
+            REDIS_SUBSCRIBE_PATTERN,
+            SERVICE_URL_BASE_PATH,
+            SOCKET_IO_PATH,
+            SERVICE_LISTEN_ON,
+        },
+    }).info("bento_event_relay listening");
 })();
 
 // Properly shut down (thus cleaning up any open socket files) when a signal is received

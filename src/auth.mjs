@@ -1,9 +1,10 @@
-import https from "https";
-import fetch from "node-fetch";
-import {BENTO_DEBUG, BENTO_AUTHZ_SERVICE_URL} from "./config.mjs";
+import { Agent } from "undici";
+import { BENTO_DEBUG, BENTO_AUTHZ_SERVICE_URL } from "./config.mjs";
 
-const httpsAgent = new https.Agent({
-    rejectUnauthorized: !BENTO_DEBUG,
+const httpsAgent = new Agent({
+    connect: {
+        rejectUnauthorized: !BENTO_DEBUG,
+    },
 });
 
 export const checkAgainstAuthorizationService = async (token) => {
@@ -24,7 +25,7 @@ export const checkAgainstAuthorizationService = async (token) => {
                 // TODO: granular permissions + message filtering instead:
                 permission: "view:private_portal",
             }),
-            agent: httpsAgent,
+            dispatcher: httpsAgent,
         });
 
         if (!res.ok) {
