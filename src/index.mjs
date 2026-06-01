@@ -3,7 +3,7 @@
 // Small service to forward events from Redis PubSub to socket.io connections
 // (e.g. a JavaScript front-end.)
 // Author: David Lougheed <david.lougheed@mail.mcgill.ca>
-// Copyright: Canadian Centre for Computational Genomics, 2019-2023
+// Copyright: Canadian Centre for Computational Genomics, 2019-2026
 
 import http from "http";
 import redis from "redis";
