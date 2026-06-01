@@ -1,6 +1,6 @@
 {
   "name": "bento_event_relay",
-  "version": "3.1.14",
+  "version": "3.1.15",
   "description": "Event relay service from Redis PubSub to socket.io",
   "main": "src/index.mjs",
   "scripts": {
@@ -22,7 +22,7 @@
   "homepage": "https://github.com/bento-platform/bento_event_relay#readme",
   "dependencies": {
     "node-fetch": "^3.3.2",
-    "redis": "^4.6.14",
+    "redis": "^5.12.0",
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
